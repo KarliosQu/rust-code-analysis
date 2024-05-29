@@ -11,11 +11,12 @@ pub enum Format {
     Json,
     Toml,
     Yaml,
+    Html,
 }
 
 impl Format {
     pub const fn all() -> &'static [&'static str] {
-        &["cbor", "json", "toml", "yaml"]
+        &["cbor", "json", "toml", "yaml", "html"]
     }
 
     pub fn dump_formats<T: Serialize>(
@@ -31,12 +32,14 @@ impl Format {
                 Self::Json => Json::with_pretty_writer(space, path, output_path, pretty),
                 Self::Toml => Toml::with_pretty_writer(space, path, output_path, pretty),
                 Self::Yaml => Yaml::with_writer(space, path, output_path),
+                Self::Html => 
             }
         } else {
             match self {
                 Self::Json => Json::write_on_stdout_pretty(space, pretty),
                 Self::Toml => Toml::write_on_stdout_pretty(space, pretty),
                 Self::Yaml => Yaml::write_on_stdout(space),
+                Self::Html => 
                 Self::Cbor => panic!("Cbor format cannot be printed to stdout"),
             }
         }
@@ -52,6 +55,7 @@ impl FromStr for Format {
             "json" => Ok(Self::Json),
             "toml" => Ok(Self::Toml),
             "yaml" => Ok(Self::Yaml),
+            "html" => Ok(Self::Html),
             format => Err(format!("{format:?} is not a supported format")),
         }
     }
